@@ -70,22 +70,3 @@ class RmaOrderLine(models.Model):
         action_dict = action.read()[0]
         action_dict["domain"] = [("id", "in", unreconciled_items.ids)]
         return action_dict
-
-    def action_open_reconcile(self):
-        aml_model = self.env["account.move.line"]
-        action = self.action_view_unreconciled()
-        amls = (
-            action.get("domain") and aml_model.search(action.get("domain")) or aml_model
-        )
-        accounts = amls.mapped("account_id")
-        action_context = {
-            "show_mode_selector": False,
-            "account_ids": accounts.ids,
-            "active_model": "account.move.line",
-            "active_ids": amls.ids,
-        }
-        return {
-            "type": "ir.actions.client",
-            "tag": "manual_reconciliation_view",
-            "context": action_context,
-        }
