@@ -29,11 +29,11 @@ class StockWarehouse(models.Model):
         "for this warehouse.",
     )
     rma_customer_pull_id = fields.Many2one(
-        comodel_name="stock.location.route",
+        comodel_name="stock.route",
         string="RMA Customer Route",
     )
     rma_supplier_pull_id = fields.Many2one(
-        comodel_name="stock.location.route",
+        comodel_name="stock.route",
         string="RMA Supplier Route",
     )
 
@@ -195,7 +195,7 @@ class StockWarehouse(models.Model):
                             "warehouse_id": self.id,
                             "company_id": self.company_id.id,
                             "location_src_id": customer_loc.id,
-                            "location_id": self.lot_rma_id.id,
+                            "location_dest_id": self.lot_rma_id.id,
                             "procure_method": "make_to_stock",
                             "picking_type_id": self.rma_cust_in_type_id.id,
                             "active": True,
@@ -212,7 +212,7 @@ class StockWarehouse(models.Model):
                             "warehouse_id": self.id,
                             "company_id": self.company_id.id,
                             "location_src_id": self.lot_rma_id.id,
-                            "location_id": customer_loc.id,
+                            "location_dest_id": customer_loc.id,
                             "procure_method": "make_to_stock",
                             "picking_type_id": self.rma_cust_out_type_id.id,
                             "active": True,
@@ -242,7 +242,7 @@ class StockWarehouse(models.Model):
                             "warehouse_id": self.id,
                             "company_id": self.company_id.id,
                             "location_src_id": supplier_loc.id,
-                            "location_id": self.lot_rma_id.id,
+                            "location_dest_id": self.lot_rma_id.id,
                             "procure_method": "make_to_stock",
                             "picking_type_id": self.rma_sup_in_type_id.id,
                             "active": True,
@@ -259,7 +259,7 @@ class StockWarehouse(models.Model):
                             "warehouse_id": self.id,
                             "company_id": self.company_id.id,
                             "location_src_id": self.lot_rma_id.id,
-                            "location_id": supplier_loc.id,
+                            "location_dest_id": supplier_loc.id,
                             "procure_method": "make_to_stock",
                             "picking_type_id": self.rma_sup_out_type_id.id,
                             "active": True,
@@ -271,7 +271,7 @@ class StockWarehouse(models.Model):
         return rma_route
 
     def _create_rma_pull(self):
-        route_obj = self.env["stock.location.route"]
+        route_obj = self.env["stock.route"]
         for wh in self:
             if not wh.rma_customer_pull_id:
                 wh.rma_customer_pull_id = (

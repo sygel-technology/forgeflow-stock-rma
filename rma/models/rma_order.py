@@ -120,6 +120,16 @@ class RmaOrder(models.Model):
         tracking=True,
         default=lambda self: self.env.uid,
     )
+    in_route_id = fields.Many2one(
+        "stock.route",
+        string="Inbound Route",
+        domain=[("rma_selectable", "=", True)],
+    )
+    out_route_id = fields.Many2one(
+        "stock.route",
+        string="Outbound Route",
+        domain=[("rma_selectable", "=", True)],
+    )
     in_warehouse_id = fields.Many2one(
         comodel_name="stock.warehouse",
         string="Inbound Warehouse",
