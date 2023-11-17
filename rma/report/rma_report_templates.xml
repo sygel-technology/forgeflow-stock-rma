@@ -84,7 +84,7 @@
                 <table class="table table-condensed">
                     <thead>
                         <tr>
-                            <th name="product" invisible="1">Product</th>
+                            <th name="product" invisible="True">Product</th>
                             <th name="lot" t-if="doc.lot_id">Lot/Serial Number</th>
                             <th name="quantity" class="text-right">Quantity</th>
                             <th name="unit_price" class="text-right">Unit Price</th>

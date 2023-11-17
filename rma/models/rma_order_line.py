@@ -231,8 +231,7 @@ class RmaOrderLine(models.Model):
     delivery_address_id = fields.Many2one(
         comodel_name="res.partner",
         string="Partner delivery address",
-        readonly=True,
-        states={"draft": [("readonly", False)]},
+        readonly="state != 'draft'",
         help="This address will be used to deliver repaired or replacement "
         "products.",
     )
@@ -246,8 +245,7 @@ class RmaOrderLine(models.Model):
         string="Reference",
         required=True,
         default="/",
-        readonly=True,
-        states={"draft": [("readonly", False)]},
+        readonly="state != 'draft'",
         help="Add here the supplier RMA #. Otherwise an internal code is" " assigned.",
         copy=False,
     )
@@ -255,8 +253,7 @@ class RmaOrderLine(models.Model):
     conditions = fields.Html(string="Terms and conditions")
     origin = fields.Char(
         string="Source Document",
-        readonly=True,
-        states={"draft": [("readonly", False)]},
+        readonly="state != 'draft'",
         help="Reference of the document that produced this rma.",
     )
     state = fields.Selection(
@@ -291,8 +288,7 @@ class RmaOrderLine(models.Model):
         required=True,
         store=True,
         tracking=True,
-        readonly=True,
-        states={"draft": [("readonly", False)]},
+        readonly="state != 'draft'",
     )
     sequence = fields.Integer(
         default=10, help="Gives the sequence of this line when displaying the rma."
@@ -301,38 +297,33 @@ class RmaOrderLine(models.Model):
         comodel_name="product.product",
         ondelete="restrict",
         required=True,
-        readonly=True,
-        states={"draft": [("readonly", False)]},
+        readonly="state != 'draft'",
     )
     product_tracking = fields.Selection(related="product_id.tracking")
     lot_id = fields.Many2one(
         comodel_name="stock.lot",
         string="Lot/Serial Number",
-        readonly=True,
-        states={"draft": [("readonly", False)]},
+        readonly="state != 'draft'",
     )
     product_qty = fields.Float(
         string="Return Qty",
         copy=False,
         default=1.0,
         digits="Product Unit of Measure",
-        readonly=True,
-        states={"draft": [("readonly", False)]},
+        readonly="state != 'draft'",
     )
     uom_id = fields.Many2one(
         comodel_name="uom.uom",
         string="Unit of Measure",
         required=True,
-        readonly=True,
         compute="_compute_uom_id",
         precompute=True,
         store=True,
-        states={"draft": [("readonly", False)]},
+        readonly="state != 'draft'",
     )
     price_unit = fields.Monetary(
         string="Unit cost",
-        readonly=True,
-        states={"draft": [("readonly", False)]},
+        readonly="state != 'draft'",
         help="Unit cost of the items under RMA",
     )
     in_shipment_count = fields.Integer(
@@ -348,8 +339,7 @@ class RmaOrderLine(models.Model):
         comodel_name="stock.move",
         string="Originating Stock Move",
         copy=False,
-        readonly=True,
-        states={"draft": [("readonly", False)]},
+        readonly="state != 'draft'",
     )
     currency_id = fields.Many2one(
         "res.currency",
@@ -368,13 +358,11 @@ class RmaOrderLine(models.Model):
     )
     customer_to_supplier = fields.Boolean(
         "The customer will send to the supplier",
-        readonly=True,
-        states={"draft": [("readonly", False)]},
+        readonly="state != 'draft'",
     )
     supplier_to_customer = fields.Boolean(
         "The supplier will send to the customer",
-        readonly=True,
-        states={"draft": [("readonly", False)]},
+        readonly="state != 'draft'",
     )
     receipt_policy = fields.Selection(
         [
@@ -402,45 +390,40 @@ class RmaOrderLine(models.Model):
         string="Inbound Route",
         required=True,
         domain=[("rma_selectable", "=", True)],
-        readonly=True,
         compute="_compute_in_route_id",
         precompute=True,
         store=True,
-        states={"draft": [("readonly", False)]},
+        readonly="state != 'draft'",
     )
     out_route_id = fields.Many2one(
         "stock.route",
         string="Outbound Route",
         required=True,
         domain=[("rma_selectable", "=", True)],
-        readonly=True,
         compute="_compute_out_route_id",
         precompute=True,
         store=True,
-        states={"draft": [("readonly", False)]},
+        readonly="state != 'draft'",
     )
     in_warehouse_id = fields.Many2one(
         comodel_name="stock.warehouse",
         string="Inbound Warehouse",
         required=True,
-        readonly=True,
-        states={"draft": [("readonly", False)]},
+        readonly="state != 'draft'",
         default=lambda self: self._default_warehouse_id(),
     )
     out_warehouse_id = fields.Many2one(
         comodel_name="stock.warehouse",
         string="Outbound Warehouse",
         required=True,
-        readonly=True,
-        states={"draft": [("readonly", False)]},
+        readonly="state != 'draft'",
         default=lambda self: self._default_warehouse_id(),
     )
     location_id = fields.Many2one(
         comodel_name="stock.location",
         string="Send To This Company Location",
         required=True,
-        readonly=True,
-        states={"draft": [("readonly", False)]},
+        readonly="state != 'draft'",
         default=lambda self: self._default_location_id(),
     )
     customer_rma_id = fields.Many2one(
@@ -452,15 +435,13 @@ class RmaOrderLine(models.Model):
     )
     supplier_address_id = fields.Many2one(
         comodel_name="res.partner",
-        readonly=True,
-        states={"draft": [("readonly", False)]},
+        readonly="state != 'draft'",
         string="Supplier Address",
         help="Address of the supplier in case of Customer RMA operation " "dropship.",
     )
     customer_address_id = fields.Many2one(
         comodel_name="res.partner",
-        readonly=True,
-        states={"draft": [("readonly", False)]},
+        readonly="state != 'draft'",
         string="Customer Address",
         help="Address of the customer in case of Supplier RMA operation " "dropship.",
     )
@@ -520,7 +501,7 @@ class RmaOrderLine(models.Model):
         store=True,
     )
     under_warranty = fields.Boolean(
-        string="Under Warranty?", readonly=True, states={"draft": [("readonly", False)]}
+        string="Under Warranty?", readonly="state != 'draft'"
     )
 
     def _prepare_rma_line_from_stock_move(self, sm, lot=False):

@@ -59,7 +59,7 @@
                         name="action_rma_to_approve"
                         type="object"
                         string="Request Approval"
-                        attrs="{'invisible':[('state', '!=', 'draft')]}"
+                        invisible="state != 'draft'"
                         class="oe_highlight"
                         groups="rma.group_rma_customer_user"
                     />
@@ -67,14 +67,14 @@
                         name="action_rma_draft"
                         type="object"
                         string="Back to Draft"
-                        attrs="{'invisible':[('state', '=', 'draft')]}"
+                        invisible="state == 'draft'"
                         groups="rma.group_rma_customer_user,rma.group_rma_supplier_user"
                     />
                         <button
                         name="action_rma_approve"
                         type="object"
                         string="Approve"
-                        attrs="{'invisible':[('state', '!=', 'to_approve')]}"
+                        invisible="state != 'to_approve'"
                         class="oe_highlight"
                         groups="rma.group_rma_manager"
                     />
@@ -82,21 +82,21 @@
                         name="action_rma_approve"
                         type="object"
                         string="Back to Approved"
-                        attrs="{'invisible':[('state', '!=', 'done')]}"
+                        invisible="state != 'done'"
                         groups="rma.group_rma_customer_user"
                     />
                         <button
                         name="action_rma_done"
                         type="object"
                         string="Done"
-                        attrs="{'invisible':[('state', 'in', ('done', 'draft', 'canceled'))]}"
+                        invisible="state in ('done', 'draft', 'canceled')"
                         groups="rma.group_rma_customer_user"
                     />
                         <button
                         name="action_rma_cancel"
                         type="object"
                         string="Cancel"
-                        attrs="{'invisible':[('state', 'in', ('done', 'canceled'))]}"
+                        invisible="state in ('done', 'canceled')"
                         groups="rma.group_rma_customer_user"
                     />
                         <field
@@ -113,7 +113,7 @@
                             name="action_view_in_shipments"
                             class="oe_stat_button"
                             icon="fa-truck"
-                            attrs="{'invisible': [('in_shipment_count', '=', 0)]}"
+                            invisible="in_shipment_count == 0"
                             groups="stock.group_stock_user"
                         >
                                 <field
@@ -127,7 +127,7 @@
                             name="action_view_out_shipments"
                             class="oe_stat_button"
                             icon="fa-truck"
-                            attrs="{'invisible': [('out_shipment_count', '=', 0)]}"
+                            invisible="out_shipment_count == 0"
                             groups="stock.group_stock_user"
                         >
                                 <field
@@ -148,7 +148,7 @@
                             class="oe_stat_button"
                             icon="fa-link"
                             groups="stock.group_stock_user"
-                            attrs="{'invisible': [('rma_line_count', '=', 0)]}"
+                            invisible="rma_line_count == 0"
                         >
                                 <field
                                 name="rma_line_count"
@@ -186,7 +186,7 @@
                                 <group name="contact">
                                     <field name="requested_by" readonly="1" />
                                     <field name="assigned_to" />
-                                    <field name="type" invisible="1" />
+                                    <field name="type" invisible="True" />
                                 </group>
                             </group>
                         </group>
@@ -194,11 +194,11 @@
                             <group name="product" string="Product">
                                 <field name="product_id" />
                                 <newline />
-                                <field name="product_tracking" invisible="1" />
+                                <field name="product_tracking" invisible="True" />
                                 <field
                                 name="lot_id"
                                 groups="stock.group_production_lot"
-                                attrs="{'required': [('product_tracking', 'in', ('serial', 'lot'))]}"
+                                required="product_tracking in ('serial', 'lot')"
                                 context="{'default_product_id': product_id,}"
                             />
                                 <field name="under_warranty" />
@@ -236,7 +236,7 @@
                                 <group name="quantities" col="4" string="Quantities">
                                     <group
                                     name="receive"
-                                    attrs="{'invisible': [('receipt_policy', '=', 'no')]}"
+                                    invisible="receipt_policy =='no'"
                                 >
                                         <field name="qty_to_receive" />
                                         <field name="qty_incoming" />
@@ -244,7 +244,7 @@
                                     </group>
                                     <group
                                     name="deliver"
-                                    attrs="{'invisible': [('delivery_policy', '=', 'no')]}"
+                                    invisible="delivery_policy == 'no'"
                                 >
                                         <field name="qty_to_deliver" />
                                         <field name="qty_outgoing" />
@@ -252,7 +252,7 @@
                                     </group>
                                     <group
                                     name="supplier_rma"
-                                    attrs="{'invisible':['|', ('type', '!=', 'customer'), ('customer_to_supplier','=',False)]}"
+                                    invisible="state != 'draft' or customer_to_supplier == False"
                                 >
                                         <field name="qty_to_supplier_rma" />
                                         <field name="qty_in_supplier_rma" />
@@ -272,14 +272,14 @@
                                 />
                                     <field
                                     name="customer_to_supplier"
-                                    attrs="{'invisible':[('type', '!=', 'customer')]}"
+                                    invisible="type != 'customer'"
                                 />
                                     <field
                                     name="supplier_address_id"
                                     context="{'show_address': 1}"
                                     options="{'always_reload': 1}"
-                                    attrs="{'required':[('customer_to_supplier', '=', True)],
-                                                   'invisible':[('customer_to_supplier', '=', False)]}"
+                                    required="customer_to_supplier"
+                                    invisible="customer_to_supplier == False"
                                 />
                                 </group>
                                 <group name="outbound" string="Outbound">
@@ -288,23 +288,23 @@
                                     name="out_route_id"
                                     groups="stock.group_adv_location"
                                 />
-                                    <field
+                                <field
                                     name="supplier_to_customer"
-                                    attrs="{'invisible':[('type', '!=', 'supplier')]}"
+                                    invisible="type != 'supplier'"
                                 />
                                     <field
                                     name="customer_address_id"
                                     context="{'show_address': 1}"
                                     options="{'always_reload': 1}"
-                                    attrs="{'required':[('supplier_to_customer', '=', True)],
-                                                   'invisible':[('supplier_to_customer', '=', False)]}"
+                                    required="supplier_to_customer"
+                                    invisible="supplier_to_customer == False"
                                 />
                                 </group>
                             </page>
                             <page
                             name="stock"
                             string="Stock Moves"
-                            attrs="{'invisible': [('move_ids', '=', [])]}"
+                            invisible="move_ids == False"
                         >
                                 <field name="move_ids" nolabel="1" readonly="1" />
                             </page>

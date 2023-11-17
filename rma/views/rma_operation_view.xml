@@ -5,7 +5,7 @@
         <field name="model">rma.operation</field>
         <field name="arch" type="xml">
             <tree name="RMA Operations">
-                <field name="active" invisible="1" />
+                <field name="active" invisible="True" />
                 <field name="code" />
                 <field name="name" />
                 <field name="receipt_policy" />
@@ -24,12 +24,12 @@
                         name="web_ribbon"
                         title="Archived"
                         bg_color="bg-danger"
-                        attrs="{'invisible': [('active', '=', True)]}"
+                        invisible="active"
                     />
                     <div class="oe_button_box" name="button_box" />
                     <group colspan="4" col="2">
                         <group name="description" string="Description">
-                            <field name="active" invisible="1" />
+                            <field name="active" invisible="True" />
                             <field name="code" />
                             <field name="name" />
                             <field name="type" />
@@ -51,7 +51,7 @@
                             />
                             <field
                                 name="customer_to_supplier"
-                                attrs="{'invisible':[('type', '=', 'supplier')]}"
+                                invisible="type=='supplier'"
                             />
                         </group>
                         <group name="outbound" string="Outbound">
@@ -59,7 +59,7 @@
                             <field name="out_warehouse_id" />
                             <field
                                 name="supplier_to_customer"
-                                attrs="{'invisible':[('type', '=', 'customer')]}"
+                                invisible="type=='customer'"
                             />
                         </group>
                     </group>

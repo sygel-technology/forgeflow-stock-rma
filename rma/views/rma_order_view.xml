@@ -73,7 +73,7 @@
                             type="object"
                             name="action_view_supplier_lines"
                             class="oe_stat_button"
-                            attrs="{'invisible':[('supplier_line_count', '=', 0)]}"
+                            invisible="supplier_line_count == 0"
                             icon="fa-list"
                             groups="rma.group_rma_supplier_user"
                         >
@@ -91,49 +91,37 @@
                 </div>
                 <group>
                     <group name="info">
-                        <field name="type" readonly="1" invisible="1" />
+                        <field name="type" readonly="1" invisible="True" />
                         <field
                                 name="partner_id"
                                 context="{'res_partner_search_mode': 'customer'}"
                                 string="Customer"
                             />
-                        <field
-                                name="reference"
-                                attrs="{'invisible':[('type', '!=', 'supplier')]}"
-                            />
-                        <field
-                                name="date_rma"
-                                attrs="{'readonly':[('state', '!=', 'draft')]}"
-                            />
+                        <field name="reference" invisible="type != 'supplier'" />
+                        <field name="date_rma" readonly="state != 'draft'" />
                     </group>
                     <group name="contact">
                         <field name="requested_by" readonly="1" />
-                        <field
-                                name="assigned_to"
-                                attrs="{'readonly':[('state', '!=', 'draft')]}"
-                            />
+                        <field name="assigned_to" readonly="state != 'draft'" />
                         <field name="company_id" groups="base.group_multi_company" />
                     </group>
                 </group>
                 <group>
                     <group name="inbound_route" string="Inbound">
-                        <field
-                                name="in_warehouse_id"
-                                attrs="{'readonly':[('state', '!=', 'draft')]}"
-                            />
+                        <field name="in_warehouse_id" readonly="state != 'draft'" />
                         <field
                                 name="customer_to_supplier"
-                                attrs="{'readonly':[('state', '!=', 'draft')],
-                                'invisible':[('type', '!=', 'customer')]}"
+                                readonly="state != 'draft'"
+                                invisible="type != 'customer'"
                             />
-                        <field name="state" invisible="1" />
+                        <field name="state" invisible="True" />
                         <field
                                 name="supplier_address_id"
                                 context="{'show_address': 1}"
                                 options="{'always_reload': 1}"
-                                attrs="{'required':[('customer_to_supplier', '=', True)],
-                                       'invisible':[('customer_to_supplier', '=', False)],
-                                       'readonly':[('state', '!=', 'draft')]}"
+                                readonly="state != 'draft'"
+                                required="customer_to_supplier"
+                                invisible="customer_to_supplier == False"
                             />
                     </group>
                 </group>
@@ -224,17 +212,14 @@
             </field>
             <group name="inbound_route" position="after">
                 <group name="outbound_route" string="Outbound">
-                    <field
-                        name="supplier_to_customer"
-                        attrs="{'readonly':[('state', '!=', 'draft')]}"
-                    />
+                    <field name="supplier_to_customer" readonly="state != 'draft'" />
                     <field
                         name="customer_address_id"
                         context="{'show_address': 1}"
                         options="{'always_reload': 1}"
-                        attrs="{'required':[('supplier_to_customer', '=', True)],
-                                   'invisible':[('supplier_to_customer', '=', False)],
-                                   'readonly':[('state', '!=', 'draft')]}"
+                        readonly="state != 'draft'"
+                        required="supplier_to_customer"
+                        invisible="supplier_to_customer == False"
                     />
                 </group>
             </group>

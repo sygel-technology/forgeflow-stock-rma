@@ -15,7 +15,7 @@
                         />
                         <field name="product_id" readonly="1" />
                         <field name="product_qty" />
-                        <field name="line_id" invisible="1" />
+                        <field name="line_id" invisible="True" />
                         <field name="uom_id" groups="uom.group_uom" readonly="1" />
                         <field name="qty_to_receive" readonly="0" />
                     </tree>
@@ -50,7 +50,7 @@
                         <field name="rma_id" groups="rma.group_rma_groups" />
                         <field name="product_id" />
                         <field name="product_qty" />
-                        <field name="line_id" invisible="1" />
+                        <field name="line_id" invisible="True" />
                         <field name="uom_id" groups="uom.group_uom" />
                         <field name="qty_to_deliver" readonly="0" />
                     </tree>
@@ -108,26 +108,26 @@
                     name="%(action_rma_picking_in)d"
                     string="Create Incoming Shipment"
                     class="oe_highlight"
-                    attrs="{'invisible':['|', '|', '|', ('qty_to_receive', '=', 0), ('qty_to_receive', '&lt;', 0), ('state', '!=', 'approved'), ('receipt_policy', '=', 'no')]}"
+                    invisible="receipt_policy == 'no' or state != 'approved' or qty_to_receive &gt;= 0"
                     type="action"
                 />
                 <button
                     name="%(action_rma_picking_in)d"
                     string="Create Incoming Shipment"
-                    attrs="{'invisible':['|', '|', ('qty_to_receive', '>', 0), ('state', '!=', 'approved'), ('receipt_policy', '=', 'no')]}"
+                    invisible="receipt_policy == 'no' or state != 'approved' or qty_to_receive &gt; 0"
                     type="action"
                 />
                 <button
                     name="%(action_rma_picking_out)d"
                     string="Create Delivery"
                     class="oe_highlight"
-                    attrs="{'invisible':['|', '|', '|', ('qty_to_deliver', '=', 0), ('qty_to_deliver', '&lt;', 0), ('state', '!=', 'approved'), ('delivery_policy', '=', 'no')]}"
+                    invisible="delivery_policy == 'no' or state != 'approved' or qty_to_deliver &lt;= 0"
                     type="action"
                 />
                 <button
                     name="%(action_rma_picking_out)d"
                     string="Create Delivery"
-                    attrs="{'invisible':['|', '|', ('qty_to_deliver', '>', 0), ('state', '!=', 'approved'), ('delivery_policy', '=', 'no')]}"
+                    invisible="delivery_policy == 'no' or state != 'approved' or qty_to_deliver &lt;= 0"
                     type="action"
                 />
             </header>

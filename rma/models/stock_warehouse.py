@@ -67,7 +67,7 @@ class StockWarehouse(models.Model):
                             {
                                 "name": "RMA",
                                 "usage": "internal",
-                                "location_id": wh.view_location_id.id,
+                                "location_id": wh.lot_stock_id.id,
                                 "company_id": wh.company_id.id,
                             }
                         )
@@ -90,7 +90,7 @@ class StockWarehouse(models.Model):
                 self.mapped("rma_customer_out_pull_id").unlink()
                 self.mapped("rma_supplier_in_pull_id").unlink()
                 self.mapped("rma_supplier_out_pull_id").unlink()
-        return super(StockWarehouse, self).write(vals)
+        return super().write(vals)
 
     def _create_rma_picking_types(self):
         picking_type_obj = self.env["stock.picking.type"]
